@@ -1,6 +1,6 @@
 # SYMBOLS#PROCS
 
-Thank you for accepting this mission, and the mission is nothing else but to add Symbols#procs to our ruby toolchain . However, to achieve our mission, we need first `touch` **symbols** & **Procs** and then with their combined power we will take on the mission. So then, come on brave one, to `:symbols`.
+Thank you for accepting this mission, and the mission is nothing else but to add Symbols#procs to our Ruby toolchain . However, to achieve our mission, we need first `touch` **symbols** & **Procs** and then with their combined power we will take on the mission. So then, come on brave one, to `:symbols`.
 
 ## Symbols
 
@@ -20,6 +20,7 @@ The following statements are handy in using(or not using) symbols:
 * After the first usage of :mysymbol all further useages of `:mysymbol` take no further memory -- they're all the same object.
 * Ruby symbols save memory over large numbers of identical literal strings.
 * Ruby symbols enhance runtime speed to at least some degree.
+_culled from [The Ruby_Newbie Guide to Symbols](http://www.troubleshooters.com/codecorn/ruby/symbols.htm) &copy; Steve Litt_
 
 let's _digest_ this with some code examples:
 
@@ -47,21 +48,21 @@ Consider the following code snippet:
 
   ready = Proc.new { puts "Are you ready for the mission?" }
 
-  commander.call #=> Soldier no: 4, state you name and your resolve
+  commander.call #=> Soldier no: 4, state your name and your resolve
   ready.call #=> Are you ready for the mission
 ```
-Here we created a proc object and stored it in a varible which we then execute using the `:call` method.
-> (Note that the solder uses a random number to assign the soldier number as such your output might be different but it would between 1 and 10)
+Here we created a proc object, store it in a variable and then execute it using the `:call` method.
+> (Note that the soldier uses a random number to assign the soldier number as such your output might be different but it would between 1 and 10)
 
 Procs can also take in parameters like methods.
 ```ruby
   soldier = Proc.new do |name, resolve|
     state = resolve ? "ready" : "not ready"
-    puts "My name is #{name}. I'm #{state}"
+    puts "My name is #{name}. I'm #{state} for the mission"
   end
 
-  soldier.call('John Doe', true) #=> My name is John Doe. I'm ready
-  soldier.call('Jane Doe', false) #=> My name is Jane Doe. I'm not ready
+  soldier.call('John Doe', true) #=> My name is John Doe. I'm ready for the mission
+  soldier.call('Jane Doe', false) #=> My name is Jane Doe. I'm not ready for the mission
 ```
 This can also be done using the {...} notation:
 
@@ -70,15 +71,15 @@ This can also be done using the {...} notation:
 
   hail.call('John Doe') #=> Well done, Brave John Doe! Onward to the mission briefing room.
 ```
-Note that one of procs attributes is that it's not strict about arguments unlike methods. As such if arguments are not provided, it will not throw errors but rather assign nil for the mission values:
+Note that one of procs attributes is that it's not strict about arguments unlike methods. As such if arguments are not provided, it will not throw errors but rather assume nil for the missing values:
 ```ruby
   hail.call #=> Well done, Brave ! Onward to the mission briefing room.
 ```
 
-The last pick up we need from this stop is converting procs to blocks and vice-verse. This conversion can be made using the **&** sign. Consider the following method which accepts a block and executes it
+The last pickup we need from this stop is converting procs to blocks and vice-verse. This conversion can be made using the **&** sign. Consider the following method which accepts a block and executes it
 ```ruby
-  def accept_proc_regiment(some_proc_arg)
-    some_proc_arg.call
+  def accept_proc_regiment(some_proc)
+    some_proc.call
   end
 
   proc = Proc.new { puts 'Soldiers of the Proc regiment are brave' }
@@ -88,7 +89,7 @@ The last pick up we need from this stop is converting procs to blocks and vice-v
   accept_proc_regiment proc #=> They always proceed first in battle
 ```
 
-Now let's modify this methods to accept a block instead. To that we affix **&** to the argument definition like so:
+Now let's modify this methods to accept a block instead. To do that we affix **&** to the argument definition like so:
 
 ```ruby
   def accept_proc_regiment(&some_proc_arg)
@@ -100,7 +101,7 @@ With that we can then execute our method like so
 ```ruby
   accept_proc_regiment { puts 'Soldiers of the Proc regiment are brave' } #=> Soldiers of the Proc regiment are brave
 ```
-Yes the do..end syntax works also:
+Yes, the `do..end` syntax works also:
 
 ```ruby
   accept_proc_regiment do
@@ -108,10 +109,15 @@ Yes the do..end syntax works also:
   end
   #=> Soldiers of the block regiment are brave also. They guard the rear flanks.
 ```
-What do you think will happen when we do the following code from our previous snippet with our modified method?
+What do you think will happen when we use the code from our previous snippet with our modified method?
+
+_Run the following code and share your thoughts and expectation in the comment section below._
 ```ruby
-  accept_proc_regiment proc #=> Soldiers of the Proc regiment are brave
-  accept_proc_regiment proc #=> They always proceed first in battle
+  proc = Proc.new { puts 'Soldiers of the Proc regiment are brave' }
+  proc = Proc.new { puts 'They always proceed first in battle' }
+
+  accept_proc_regiment proc #=> ???
+  accept_proc_regiment proc #=> ???
 ```
 
 So, what exactly is the magic of the **&**? We'll find out together in minute, for now, add this to your armory.
@@ -147,7 +153,7 @@ Let's construct a class for our soldier object
       500 * name.length
     end
 
-    def grade_a_weapon
+    def grade_a_weapon?
       weapon.length > 5
     end
   end
@@ -157,9 +163,9 @@ Let's construct a class for our soldier object
   # From our symbol armory
   soldier.send(:name) #=> John Doe
   soldier.send(:weapon) #=> AK-47
-  soldier.send(:salary) #=> 500
+  soldier.send(:salary) #=> 4000
 ```
-_note that using the **(.)** notation also work but for the sake of target we use send_
+_note that using the **(.)** notation also works but for the sake of our mission we use send_
 Next up, we'll create a collection of all soldiers that signed up for the mission
 
 ```ruby
@@ -177,7 +183,7 @@ Next up, we'll create a collection of all soldiers that signed up for the missio
 
 ```
 
-What if we need a collection of just the name of the soldiers, we could using the map function
+What if we need a collection of just the names of the soldiers, we could using the map function do
 
 ```ruby
   soldiers.map{ |soldier|  soldier.send(:name) } #=> ["Big Mike", "Small John", "Lightening Larry"]
@@ -193,10 +199,11 @@ With symbol#proc, we can simplify this further
   soldiers.map(&:name) #=> ["Big Mike", "Small John", "Lightening Larry"]
 ```
 
-Now you know why need to make those stops we made at symbols and procs as such the question now won't be what each components of the code mean but rather, **How?**
+Now you know why we needed to make those stops we made at symbols and procs as such the question now won't be what each components of the code mean but rather, **How?**
 
-To explain, we need to answer our pending question what exactly is the magic of the **&**?
-The & calls `to_proc` on the object, and passes it as a block to the method. As such, if you put & in front of a Proc instance in the argument position, that will be interpreted as a block. If you combine something other than a Proc instance with &, then implicit class casting will try to convert that to a Proc instance using to_proc method defined on that object if there is any. In case of a Symbol instance, like above, to_proc works in this way:
+To explain, we need to answer our pending question what exactly is the magic of the **&**
+
+The **&** calls `to_proc` on the object, and passes it as a block to the method. As such, if you put & in front of a Proc instance in the argument position, that will be interpreted as a block. If you combine something other than a Proc instance with &, then implicit class casting will try to convert that to a Proc instance using `to_proc` method defined on that object (if any). In the case of a Symbol instance, like above, `to_proc` works in this way:
 
 ```ruby
   class Symbol
@@ -205,26 +212,31 @@ The & calls `to_proc` on the object, and passes it as a block to the method. As 
     end
   end
 ```
-What this does is to call a method named of the symbol (self.to_s) on the passed in argument. So say the symbol name is : and the passed in argument is enemy, the result will be `enemy.send('attack')` which is equivalent to `enemy.attack`
+What the `to_proc` implementation in the **Symbol** class does is to call a method with the same name as the `symbol` (i.e. self) on the passed in object. So say the symbol name is `:attack` and the passed in argument is `enemy`, the result will be `enemy.send('attack')` which is equivalent to `enemy.attack`
 
-So for each of the soldiers in the array, the map method passes it to the proc as x. Therefore, the argument to map is interpreted as
+So for each of the soldiers in the array, the map method passes it to the proc as `x`. Therefore, the argument to map is interpreted as
 ```ruby
-  soldiers.map { |x| x.name } # x in this case is each soldier in the array
+  soldiers.map { |x| x.name } # where x in this case is each soldier in the array
 ```
 Note that this `Symbol#proc` conversion is valid for all methods that accept a proc.
+
 With that knowledge, to return the soldiers weapon, we can easily do
 
 ```ruby
-  soldiers.map(&:weapon)
+  soldiers.map(&:weapon) #=> ["Bazooka", "Pistol", "Uzi"]
+
+  # to return the soldiers salaries
   soldiers.collect(&:salary) #=> [4000, 5000, 8000]
 
   #to get soldiers with grade_a_weapon
-  soldiers.select(&:grade_a_weapon) #=> [#<Context::Soldier:0x000000017065b0 @name="Big Mike", @weapon="Bazooka">, #<Context::Soldier:0x00000001706538 @name="Small John", @weapon="Pistol">]
-  soldiers.select(&:grade_a_weapon).map(&:weapon) #=> ["Bazooka", "Pistol"]
-  # How will get a list of all grade a weapon
+  soldiers.select(&:grade_a_weapon?) #=> [#<Context::Soldier:0x000000017065b0 @name="Big Mike", @weapon="Bazooka">, #<Context::Soldier:0x00000001706538 @name="Small John", @weapon="Pistol">]
+  soldiers.select(&:grade_a_weapon?).map(&:weapon) #=> ["Bazooka", "Pistol"]
 ```
+_Here's one for you to try out: write code to retrieve the last_name of soldiers with grade_a_weapon. Share your implementation in the comment section._
 
-Now let's towards more ambitious adventure. We can override the to_proc method in the Symbol class to achieve custom result. For instance say we want to always append the team captain's name to all to_proc requests;
+Now let's match towards a more ambitious adventure.
+
+We can override the `to_proc` method in the Symbol class to achieve custom result. For instance say we want to always append the team captain's name to all `to_proc` requests;
 
 ```ruby
   class Symbol
@@ -233,16 +245,18 @@ Now let's towards more ambitious adventure. We can override the to_proc method i
     end
   end
 
-  # The we have
+  # Then we have
   soldiers.map(&:name) #=> ["Big Mike (signed John Doe Commander)", "Small John (signed John Doe Commander)", "Lightening Larry (signed John Doe Commander)"]
 ```
-Of course this will override every other symbol to conversion
+Of course this will override every other symbol `to_proc` conversion
 
 ```ruby
   [1, 2, 3, 4, 5].map(&:to_f) #=> ["1.0 (signed John Doe Commander)", "2.0 (signed John Doe Commander)", "3.0 (signed John Doe Commander)", "4.0 (signed John Doe Commander)", "5.0 (signed John Doe Commander)"]
 ```
 
-What if we don't want to depend on the Symbol to_proc conversion, we'll we can define our own. Say we want to still append the team captain's name to our conversion but we don't want it to override other conversion we might want to do, we can create a custom class with a to_proc method defined therein and then pass that as the arg to our map method method.
+What if we don't want to depend on the **Symbol** `to_proc` conversion, well, we can define our own.
+
+Say we want to still append the team captain's name to our conversion but we don't want it to override other `symbol#proc` conversion, we can create a custom class with a to_proc method defined therein and then pass that as the arg to our map method method.
 
 ```ruby
   class CustomToProc
@@ -260,11 +274,12 @@ What if we don't want to depend on the Symbol to_proc conversion, we'll we can d
 
 One common gotchas to watch out for is that symbol#to_proc does not take an extra argument
 ```ruby
-  # say you want to names of all the grade_a_weapon
-  soldiers.select(&:grade_a_weapon.name) #=> undefined method `name' for :grade_a_weapon:Symbol
+  # say you want to retrieve the names of all the grade_a_weapon?
+  soldiers.select(&:grade_a_weapon?.name) #=> undefined method `name' for :grade_a_weapon?:Symbol
 
   # or
-  soldiers.select(&:grade_a_weapon, name) #=> syntax error, unexpected ',', expecting ')'
+  soldiers.select(&:grade_a_weapon?, name) #=> syntax error, unexpected ',', expecting ')'
+
 ```
 
 ## Conclusion
@@ -286,4 +301,4 @@ examples
   soldiers.map{|x| x.last_name }
   soldiers.map{|x| x.first_name }
 ```
-Congrats you've successfully completed the mission. Show your mastery of symbol to_proc by rewriting the examples above; paste your implementation in the comment section below.
+Congrats you've successfully completed the mission. Show your mastery of `symbol#proc` by rewriting the examples above using what you just learned; paste your implementation in the comment section below.
